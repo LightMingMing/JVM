@@ -42,9 +42,13 @@ java.lang.OutOfMemoryError:Java heap space
 
 ### 2.3 方法区和运行时常量池溢出
 ```
-方法区大小
+JDK 1.7 永久带大小
 -XX:PermSize
 -XX:MaxPermSize
+
+JDK 1.8 元数据区大小
+-XX:MetaspaceSize
+-XX:MaxMetaspaceSize
 ```
 
 > String.intern() 在JDK 1.6中，把首次遇到的字符串实例复制到永久代中，返回的是永久带中这个字符串的引用；JDK 1.7 不会复制实例，只是在常量池中记录首次出现的引用
