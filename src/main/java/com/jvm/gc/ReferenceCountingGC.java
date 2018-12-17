@@ -2,7 +2,7 @@ package com.jvm.gc;
 
 /**
  * GC
- * VM params : JDK 1.8 -XX:+PrintGC -XX:+PrintGCDetails JDK11 -Xlog:gc -Xlog:gc*
+ * VM params : JDK 1.8 -XX:+PrintGC -XX:+PrintGCDetails JDK 11 -Xlog:gc -Xlog:gc*
  *
  * @author LightMingMing
  */
