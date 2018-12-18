@@ -99,10 +99,12 @@ JDK 1.8 元数据区大小
 
 ### 3.3 HotSpot相关算法
 1. 枚举根节点-GC Roots, OopMap(Ordinary Object Point)数据结构，在类加载完成的时候，对象内什么偏移量上是什么类型的数据就已计算出来，在JIT编译时也会存放栈、寄存器中引用位置
+
+   > GC停顿(Stop the world)---引用分析时，对象的引用关系还在变化的话，引用分析结果的正确性就无法得到保证。即使CMS收集器，枚举根结点时也是必须停顿的
 2. 安全点SafePoint-特定位置记录OopMap, 方法调动、循环跳转、异常跳转；用户线程停顿
 
     抢先式中断 Preemptive Suspension, GC发生时，让线程全部中断，有不在安全点的，就恢复执行到安全点  
-    主动式中断 Voluntary Suspension, 设置一个标志，各线程执行时主动去轮询这个标志，发现中断标志为真时，就自己中断挂起
+    主动式中断 Voluntary Suspension, 设置一个标志，各线程执行时主动去轮询这个标志，发现中断标志为真时，就自己中断挂起(几乎所有的JVM都采用主动式中断)
     
 3. 安全区域Safe Region, 程序处于Sleep状态或Blocked状态时，程序无法响应中断请求
 
