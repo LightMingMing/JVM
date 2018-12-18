@@ -15,6 +15,8 @@
    
     JDK1.4 NIO, Channel/Buffer, 使用Native函数库直接分配堆外内存，然后通过一个存储在Java堆中的`DirectByteBuffer`对象作为这块内存的引用进行操作，避免了在Java堆和Native堆中来回复制数据
 
+![Java Memory Area](png/JavaMemoryArea.png)
+
 ## 2. OutOfMemoryError异常
 ### 2.1 Java 堆溢出
 ```
@@ -111,6 +113,7 @@ JDK 1.8 元数据区大小
     安全区域，一段代码中，引用关系不会发生变化，在这个区域中的任何地方GC都是安全的，离开时，要检测是否完成了GC过程
 
 ### 3.4 垃圾收集器
+![HotSpot Garbage Collectors](png/HotSpotGarbageCollectors.png)
 1. Serial--Client模式下新生代收集器，单线程收集器，简单高效
 2. ParNew--新生代并行收集，默认开启线程收集数量与CPU数量一致
 3. Parallel Scavenge --JDK1.4 新生代复制算法收集器，目标是达到一个可控的吞吐量(Throughput=UserTime/UserTime+GcTime),别的收集器更多的关注停顿时间
