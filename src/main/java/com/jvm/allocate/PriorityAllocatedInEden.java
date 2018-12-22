@@ -3,6 +3,7 @@ package com.jvm.allocate;
 /**
  * 对象优先在新生代(New Generation)分配
  * VM params : JDK 8 -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:SurvivorRatio=8
+ *
  * @author LightMingMing
  */
 public class PriorityAllocatedInEden {
@@ -12,7 +13,7 @@ public class PriorityAllocatedInEden {
     public static void main(String[] args) {
         final int size = 4;
         byte[][] allocs = new byte[size][];
-        for (int i = 0; i < size; i ++)
+        for (int i = 0; i < size; i++)
             allocs[i] = new byte[_1M];
     }
 }
