@@ -137,6 +137,25 @@ JDK 1.8 元数据区大小
     4. 可预测停顿
 
 
+| 参数 | 描述 |
+| ------ | ------- |
+| UseSerialGC | Client模式下的默认值, Serial + Serial Old|
+| UseParNewGC | ParNew + Serial Old|
+| UseConcMarkSweepGC | ParNew + CMS + Serial Old(Concurrent Mode Failure失败后的后备收集器)|
+| UseParallelGC | Server模式下的默认值, Parallel Scavenge + Serial Old |
+| UseParallelOldGC | Parallel Scavenge + Parallel Old (JDK 1.8 Server 默认)|
+| SurvivorRatio | Eden与Survivor比例 默认为8 |
+| PretenureSizeThreshold | 直接晋升老年代对象的大小 |
+| MaxTenuringThreshold | 晋升到老年代对象的年龄 |
+| UseAdaptiveSizePolicy | 动态调整Java堆各个区域的大小以及进入老年代的年龄 |
+| HandlePromotionFailure | 是否允许分配担保失败, 老年代剩余空间无法应对新生代的整个Eden和Survivor区的所有对象都存活的情况 |
+| ParallelGCThreads | 并行GC回收的线程数 |
+| GCTimeRatio | GC时间占总时间的比率, 默认为99, 1%的GC时间, 在Parallel Scavenge时生效 |
+| MaxGCPauseMillis | GC最大停顿时间, 在Parallel Scavenge时生效 |
+| CMSInitiatingOccupancyFraction | GC发起占有比例, 老年代空间被使用多少后触发垃圾收集。默认68%|
+| UseCMSCompactAtFullCollection | CMS收集器在完成垃圾收集后是否要进行一次内存碎片整理 |
+| CMSFullGCsBeforeCompaction | 若干次垃圾收集后启动一次碎片整理 |
+
 ### 3.5 内存分配与回收策略
 1. 对象优先在Eden分配
 
