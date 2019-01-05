@@ -235,6 +235,11 @@ jstat -<option> [-t] [-h<lines>] <vmid> [<interval> [<count>]]
 | -gcutil | 关注使用空间占总空间百分比 |
 | -printcompilation | 输出已经被JIT编译的方法 |
 
+> Compiler Time 虚拟机JIT编译器(Just In Time Compiler)编译热点代码(Hot Spot Code). 
+> Java代码编译出来后形成的Class文件中存储的是字节码(ByteCode), 虚拟机通过解释方式执行字节码命令, 相比与C/C++编译成本地二进制代码来说, 速度要慢. 
+> 为了解决程序解释执行速度问题, 一旦Java方法被调用次数达到一定程度, 就会被判定为热代码交给JIT编译器即时编译为本地代码,提高运行速度.
+> 甚至运行期动态编译比C/C++的编译期静态编译出来的代码更优秀, 因为运行期可以收集到很多编译期无法得知的信息.
+
 ```sbtshell
 [JDK 11]
 ➜  ~ jstat -gcutil 1646
