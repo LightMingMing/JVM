@@ -285,3 +285,11 @@ VM Flags:
 VM Flags:
 -XX:CICompilerCount=4 -XX:InitialHeapSize=268435456 -XX:MaxHeapSize=4294967296 -XX:MaxNewSize=1431306240 -XX:MinHeapDeltaBytes=524288 -XX:NewSize=89128960 -XX:OldSize=179306496 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseFastUnorderedTimeStamps -XX:+UseParallelGC
 ```
+
+### 5. JVM 类加载机制
+
+### 6. 虚拟机字节码执行引擎
+
+### 7. 运行期优化
+
+### 8. Java 内存模型
