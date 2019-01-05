@@ -188,3 +188,95 @@ if (老年代最大可用连续空间 > 新生代所有对象可用空间) {
     return Full_GC;
 }
 ```
+## 4. JVM 性能监控工具
+
+### 4.1 jps (JVM Process Status Tool)虚拟机进程状况
+```
+jps [-q] [-mlvV] [<hostid>]
+```
+| 选项 | 作用|
+|----- | ----- |
+| -q | 省略主类名称 |
+| -m | 输出传递给 main() 函数的参数 |
+| -l | 主类全名 |
+| -v | 虚拟机进程启动时JVM参数|
+
+```sbtshell
+jps -v
+1646 im-server-1.0.jar -Xverify:none
+```
+
+### 4.2 jstat (JVM Statistics Monitoring Tool) 虚拟机统计信息监视工具
+显示本地或远程虚拟机进程中的类装载、内存、垃圾收集、JIT编译等运行数据
+```sbtshell
+jstat -<option> [-t] [-h<lines>] <vmid> [<interval> [<count>]]
+
+~ jstat -options
+-class
+-compiler
+-gc
+-gccapacity
+-gccause
+-gcmetacapacity
+-gcnew
+-gcnewcapacity
+-gcold
+-gcoldcapacity
+-gcutil
+-printcompilation
+```
+| 选项 | 作用 |
+| ----- | ----- |
+| -class | 类加载、卸载、空间、类加载时间 |
+| -compiler | JIT 编译器编译过的方式、耗时 |
+| -gc | Eden、Survivor、Old、Permanent(Metaspace)容量、已用空间和GC时间 |
+| -gccapacity | 各个区域使用到的最大最小空间 |
+| -gccause | 与gcutil类型，额外输出导致上一次GC原因 |
+| -gcutil | 关注使用空间占总空间百分比 |
+| -printcompilation | 输出已经被JIT编译的方法 |
+
+```sbtshell
+[JDK 11]
+➜  ~ jstat -gcutil 1646
+  S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT    CGC    CGCT     GCT   
+  0.00   0.00  65.38   0.00      -      -      0    0.000     0    0.000     0    0.000    0.000
+
+➜  ~ jstat -gc 1646
+ S0C    S1C    S0U    S1U      EC       EU        OC         OU       MC     MU    CCSC   CCSU   YGC     YGCT    FGC    FGCT    CGC    CGCT     GCT   
+ 0.0    0.0    0.0    0.0   26624.0  17408.0   235520.0     0.0      0.0    0.0    0.0    0.0        0    0.000   0      0.000   0      0.000    0.000
+ 
+S0C: Current survivor space 0 capacity (KB).
+S0U: Survivor space 0 utilization (KB).
+CCSC: Compressed class committed size (KB).
+CCSU: Compressed class space used (KB).
+YGC: Number of young generation garbage collection (GC) events.
+YGCT: Young generation garbage collection time.
+FGC: Number of full GC events.
+FGCT: Full garbage collection time.
+CGC: ?
+CGCT: ?
+
+[JDK 8]
+➜  ~ jstat -gcutil 2949
+  S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT    CGC    CGCT     GCT   
+  0.00   0.00  34.05   0.00  17.39  19.90      0    0.000     0    0.000     -        -    0.000
+
+➜  ~ jstat -gc 2949
+ S0C    S1C    S0U    S1U      EC       EU        OC         OU       MC     MU    CCSC   CCSU   YGC     YGCT    FGC    FGCT    CGC    CGCT     GCT   
+10752.0 10752.0  0.0    0.0   65536.0  13136.6   175104.0     0.0     4480.0 779.2  384.0   76.4       0    0.000   0      0.000   -          -    0.000
+
+```
+详见[jstat](https://docs.oracle.com/en/java/javase/11/tools/jstat.html#GUID-5F72A7F9-5D5A-4486-8201-E1D1BA8ACCB5)
+
+### 4.3 jinfo Java配置信息工具
+```sbtshell
+[JDK11]
+➜  im jinfo -flags 3743
+VM Flags:
+-XX:CICompilerCount=4 -XX:ConcGCThreads=3 -XX:G1ConcRefinementThreads=10 -XX:G1HeapRegionSize=1048576 -XX:GCDrainStackTargetSize=64 -XX:InitialHeapSize=268435456 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=4294967296 -XX:MaxNewSize=2576351232 -XX:MinHeapDeltaBytes=1048576 -XX:NonNMethodCodeHeapSize=5835340 -XX:NonProfiledCodeHeapSize=122911450 -XX:ProfiledCodeHeapSize=122911450 -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseG1GC 
+
+[JDK8]
+➜  ~ jinfo -flags 2949
+VM Flags:
+-XX:CICompilerCount=4 -XX:InitialHeapSize=268435456 -XX:MaxHeapSize=4294967296 -XX:MaxNewSize=1431306240 -XX:MinHeapDeltaBytes=524288 -XX:NewSize=89128960 -XX:OldSize=179306496 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseFastUnorderedTimeStamps -XX:+UseParallelGC
+```
