@@ -52,6 +52,6 @@ public class MagicalOverload {
     // ...
 
     public String hello(Object... c) {
-        return "Hello, object...";
+        return "Hello, Object...";
     }
 }
