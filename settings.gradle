@@ -1,2 +1,3 @@
 rootProject.name = 'jvm'
-
+include 'jvm-core'
+include 'jvm-bytecode'
