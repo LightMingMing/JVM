@@ -6,6 +6,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -73,6 +76,14 @@ public class ConstantPoolModifierTest {
                 "out:Ljava/io/PrintStream;", CUSTOMIZE_SYSTEM);
         Files.write(path6, clazzBytes2, StandardOpenOption.CREATE);
         Assert.assertEquals(EXPECTED_POOL_SIZE_2 + 2, ConstantPoolModifier.getConstantPoolCount(clazzBytes2));
+    }
+
+    @Test
+    public void classLoadingTest() throws Throwable {
+        byte[] clazzBytes = Files.readAllBytes(path6);
+        Class<?> clazz = new HotSwapClassLoader().findClass(clazzBytes);
+        MethodHandle methodHandle = MethodHandles.lookup().findStatic(clazz, "main", MethodType.methodType(void.class, String[].class));
+        methodHandle.invoke((Object) new String[0]);
     }
 }
 /*
