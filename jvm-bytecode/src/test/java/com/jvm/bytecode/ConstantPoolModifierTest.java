@@ -1,20 +1,57 @@
 package com.jvm.bytecode;
 
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 public class ConstantPoolModifierTest {
 
+    private static final String SYSTEM = "java/lang/System";
+    private static final String CUSTOMIZE_SYSTEM = "com/jvm/bytecode/CustomizeSystem";
+
+    private static Path path1;
+    private static Path path2;
+    private static Path path3;
+    private byte[] clazzBytes;
+
+    @BeforeClass
+    public static void beforeClass() {
+        String userDir = System.getProperty("user.dir");
+        path1 = Paths.get(userDir, "src/test/resources", "HelloWorld8.class");
+        path2 = Paths.get(userDir, "src/test/resources", "ModifyConstantUtf8Info.class");
+        path3 = Paths.get(userDir, "src/test/resources", "ModifyConstantFieldRefInfo.class");
+    }
+
+    @Before
+    public void before() throws IOException {
+        clazzBytes = Files.readAllBytes(path1);
+    }
+
     @Test
-    public void getConstantPoolCount() throws URISyntaxException, IOException {
-        String userDir = System.getProperties().getProperty("user.dir");
-        byte[] bytes = Files.readAllBytes(Paths.get(userDir, "src/test/resources", "HelloWorld8.class"));
-        Assert.assertEquals(28 + 1, ConstantPoolModifier.getConstantPoolCount(bytes));
+    public void constantPoolCountTest() {
+        Assert.assertEquals(28 + 1, ConstantPoolModifier.getConstantPoolCount(clazzBytes));
+    }
+
+    @Test
+    public void modifyConstantUtf8InfoTest() throws IOException {
+        clazzBytes = ConstantPoolModifier.modifyConstantUtf8Info(clazzBytes, SYSTEM, CUSTOMIZE_SYSTEM);
+        Files.write(path2, clazzBytes, StandardOpenOption.CREATE);
+        Assert.assertEquals(28 + 1, ConstantPoolModifier.getConstantPoolCount(clazzBytes));
+    }
+
+    @Test
+    public void modifyConstantFieldRefInfoTest() throws IOException {
+        clazzBytes = ConstantPoolModifier.modifyConstantFieldRefInfo(clazzBytes, SYSTEM,
+                "out:Ljava/io/PrintStream;", CUSTOMIZE_SYSTEM);
+        Files.write(path3, clazzBytes, StandardOpenOption.CREATE);
+        Assert.assertEquals(30 + 1, ConstantPoolModifier.getConstantPoolCount(clazzBytes));
     }
 }
 /*
