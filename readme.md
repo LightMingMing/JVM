@@ -1,4 +1,36 @@
 # 深入理解JVM虚拟机
+```
+JVM
+ |---- jvm-bytecode                                                   自己动手实现远程执行升级版
+ |         |---- src/main/java
+ |                     |---- com.jvm.bytecode
+ |                                  |---- ByteUtils.java              字节工具
+ |                                  |---- ConstantsPoolModifier.java  修改/替换常量池
+                                                                      当前仅支持'Constant_Utf8_info'和'Constant_Fieldref_info'
+ |                                  |---- CustomeizeSystem.java       用于替换'java/lang/System'
+ |                                  |---- HotSwapClassLoader.java
+ |
+ |         |---- src/test
+ |                  |---- java                                        测试用例
+ |                  |---- resources                                   字节码文件或测试输出文件
+ |
+ |---- jvm-core  
+ |         |---- src/main/java
+ |                     |---- jvm
+ |                            |---- allocate                          内存分配策略
+ |                            |---- classloading                      类加载器
+ |                            |---- execution.engine                  执行引擎
+ |                                          |----- invokedynamic      动态调用
+ |                            |---- gc                                垃圾回收
+ |                            |---- oom                               模拟内存溢出
+ |
+ |         |---- src/main/test                  
+ |
+ |---- png
+ |---- build.gradle
+ |---- readme.md
+ |---- settings.gradle
+```
 ## 1. Java 内存区域
 1. 程序计数器
 2. Java虚拟机栈
@@ -287,6 +319,78 @@ VM Flags:
 ```
 
 ## 5. JVM 类加载机制
+
+### 5.1 Class Loading 类加载
+
+#### 类加载器
+1. Bootstrap ClassLoader: 启动类加载器, 负责加载存放`<JAVA_HOME>/lib`目录中的Jar文件, 并且名字是被虚拟机识别的, 名字不符合的类库放在lib中也不会被加载
+2. Extension ClassLoader: 扩展类加载器`sun.misc.Launcher$ExtClassLoader`, 负责加载`<JAVA_HOME>/lib/ext`目录或者`java.ext.dirs`系统变量所指定的类库
+3. Application ClassLoader: 应用程序类加载器`sun.misc.Launcher$AppClassLoader`, 加载用户类路径上所指定的类库
+
+> 双亲委托模型  
+> 调用类加载器的`loadClass`方法进行类加载时
+> 1. 如果当前类已被虚拟机加载, 则直接返回
+> 2. 调用当前类加载器的父类加载器(为null则是启动类加载器)的`loadCLass`进行类加载
+> 3. 当前类加载`findClass`进行类加载
+
+```java
+public abstract class ClassLoader {
+    
+    private final ClassLoader parent; // parent class loader
+    
+    protected Class<?> loadClass(String name, boolean resolve)
+        throws ClassNotFoundException
+    {
+        synchronized (getClassLoadingLock(name)) {
+            // First, check if the class has already been loaded
+            Class<?> c = findLoadedClass(name);
+            if (c == null) {
+                long t0 = System.nanoTime();
+                try {
+                    if (parent != null) {
+                        c = parent.loadClass(name, false); // Parent class loader
+                    } else {
+                        c = findBootstrapClassOrNull(name); // Bootstrap Class Loader
+                    }
+                } catch (ClassNotFoundException e) {
+                    // ClassNotFoundException thrown if class not found
+                    // from the non-null parent class loader
+                }
+
+                if (c == null) {
+                    // If still not found, then invoke findClass in order
+                    // to find the class.
+                    long t1 = System.nanoTime();
+                    c = findClass(name);
+
+                    // this is the defining class loader; record the stats
+                    sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);
+                    sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);
+                    sun.misc.PerfCounter.getFindClasses().increment();
+                }
+            }
+            if (resolve) {
+                resolveClass(c);
+            }
+            return c;
+        }
+    }
+}
+```
+### 5.2 Linking 链接
+#### Verification 验证
+#### Preparation 准备
+#### Resolution 解析
+### 5.3 Initialization 初始化
+类立即进行初始化的5种情况(对一个类进行主动引用)
+1. new、getstatic、putstatic或invokestatic这4条字节码
+2. `java.lang.reflect`包中的方法对类进行反射调用
+3. 初始化一个类时, 如果父类没有初始化, 则会初始化父类
+4. 虚拟机启动时, 会初始化包含main()方法的主类
+5. JDK1.7及以上支持动态语言的版本, `java.lang.invoke.MethodHandle`实例最后的解析结果是`REF_getStatic`,`REF_putStatic`, `REF_invokeStatic`的方法句柄, 这些方法句柄所对应的类
+
+### 5.4 Unloading 卸载
+
 
 ## 6. 虚拟机字节码执行引擎
 
