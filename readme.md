@@ -1,7 +1,7 @@
 # 深入理解JVM虚拟机
 ```
 JVM
- |---- jvm-bytecode                                                   自己动手实现远程执行升级版
+ |---- jvm-bytecode                                                   自己动手实现远程执行-加强版
  |         |---- src/main/java
  |                     |---- com.jvm.bytecode
  |                                  |---- ByteUtils.java              字节工具
@@ -330,8 +330,8 @@ VM Flags:
 > 双亲委托模型  
 > 调用类加载器的`loadClass`方法进行类加载时
 > 1. 如果当前类已被虚拟机加载, 则直接返回
-> 2. 调用当前类加载器的父类加载器(为null则是启动类加载器)的`loadCLass`进行类加载
-> 3. 当前类加载`findClass`进行类加载
+> 2. 调用当前类加载器的父类加载器(为null则是启动类加载器)的`loadCLass`方法进行类加载
+> 3. 调用当前类加载器`findClass`方法进行类加载
 
 ```java
 public abstract class ClassLoader {
