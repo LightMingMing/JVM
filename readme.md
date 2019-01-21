@@ -1,7 +1,7 @@
 # 深入理解JVM虚拟机
 ```
 JVM
- |---- jvm-bytecode                                                   自己动手实现远程执行-加强版
+ |---- jvm-bytecode                                                   Simple Java Byte Code Modifier
  |         |---- src/main/java
  |                     |---- com.jvm.bytecode
  |                                  |---- ByteUtils.java              字节工具
