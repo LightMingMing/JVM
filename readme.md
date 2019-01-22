@@ -22,6 +22,7 @@ JVM
  |                            |---- execution.engine                  执行引擎
  |                                          |----- invokedynamic      动态调用
  |                            |---- gc                                垃圾回收
+ |                            |---- initialization                    类初始化
  |                            |---- oom                               模拟内存溢出
  |
  |         |---- src/main/test                  
