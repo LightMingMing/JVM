@@ -38,13 +38,13 @@ JVM
 4. Java堆
 5. 方法区 - 类信息、常量、静态变量、即时编译器编译后的代码
 6. 运行时常量池 - 方法区的一部分
-   
+  
     编译期生成的各种字面量和符号引用存放在常量池`Constant Pool Table`中,在类加载后进入方法区的运行时常量池
     
     动态性:运行期间也可以讲新的常量放入池，如`String.intern()`方法
 
 7. 直接内存 `Direct Memory`
-   
+  
     JDK1.4 NIO, Channel/Buffer, 使用Native函数库直接分配堆外内存，然后通过一个存储在Java堆中的`DirectByteBuffer`对象作为这块内存的引用进行操作，避免了在Java堆和Native堆中来回复制数据
 
 ![Java Memory Area](png/JavaMemoryArea.png)
@@ -100,7 +100,7 @@ JDK 1.8 元数据区大小
 ### 3.1 在或不在
 1. 引用计数 Reference Counting *简单高效 -- 循环引用*
 2. 可达性分析 Reachability Analysis
-   
+  
     GC Roots , Reference Chain引用链
     
     可作为GC Roots的对象：
@@ -110,7 +110,7 @@ JDK 1.8 元数据区大小
     4. 本地方法栈中JNI(Native方法)引用的对象
 3. finalize()-- 拥有**一次**自我救赎的机会, 还是最好不要用, 不可控性太大, JDK9已被标记为废弃方法
 4. 方法区回收--废弃常量、无用类
-   
+  
     废弃常量：常量池中常量，没有任何对象引用，也没有其他地方引用这个字面量
     
     无用的类
@@ -149,7 +149,7 @@ JDK 1.8 元数据区大小
 1. Serial--Client模式下新生代收集器，单线程收集器，简单高效
 2. ParNew--新生代并行收集，默认开启线程收集数量与CPU数量一致
 3. Parallel Scavenge --JDK1.4 新生代复制算法收集器，目标是达到一个可控的吞吐量(Throughput=UserTime/UserTime+GcTime),别的收集器更多的关注停顿时间
-   
+  
    (GC Ergonomics)GC自适应调节策略-XX:+UserAdaptiveSizePolicy，不需要手动设置-Xmn(新生代) -XX:SurvivorRatio -XX:PretenureSizeThreshold(晋升老年代大小)
 4. Serial Old--老年代标记整理，单线程
 5. Parallel Old--JDK1.6 老年代标记整理，多线程 (为了与Parallel Scavenge更好的搭配)
@@ -192,15 +192,16 @@ JDK 1.8 元数据区大小
 1. 对象优先在Eden分配
 
     Eden区没有足够的空间进行分配时，虚拟机发起一次Minor GC.
+
     > Full GC/Major GC:指发生在老年代的GC,速度一般比Minor GC慢10倍以上 
-    
+
 2. 大对象直接进入老年代
-   
+  
     大对象：连续内存空间的Java对象，更可怕的是一群短命大对象
     -XX:PretenureSizeThreshold, 大于这个参数的对象直接在老年代分配。该参数只对**Serial、ParNew**有效
     
 3. 长期存活对象进入老年代
-   
+  
    算算你对象的年龄：
    对象出生于Eden区，经历一次Minor GC仍然存活并且能够移动到Survivor空间中，年龄设为1。以后每经历过一个Minor GC,age+1。
    默认15岁，就是个老年人了... 可以通过-XX:MaxTenuringThreshold设置
@@ -377,7 +378,90 @@ public abstract class ClassLoader {
     }
 }
 ```
+
+> 破坏双亲委托模型:使用`Thread.currentThread().getContextClassLoader()`上下文类加载器或通过`Reflection.getCallerClass()`*仅由Bootstrap和Ext类加载器加载的类才可调用*获取调用者
+```java
+package com.mysql.jdbc;
+public class Driver extends NonRegisteringDriver
+     implements java.sql.Driver
+ {
+	static {
+		try {
+			DriverManager.registerDriver(new Driver()); // 注册MySQL Driver
+		} catch (SQLException E) {
+			throw new RuntimeException("Can't register driver!");
+		}
+	}
+}
+```
+
+```java
+package java.sql;
+public class DriverManager {
+    
+	public static synchronized void registerDriver(java.sql.Driver driver,
+            DriverAction da)
+        throws SQLException {
+
+        /* Register the driver if it has not already been added to our list */
+        if(driver != null) {
+            registeredDrivers.addIfAbsent(new DriverInfo(driver, da));
+        } else {
+            // This is for compatibility with the original DriverManager
+            throw new NullPointerException();
+        }
+
+        println("registerDriver: " + driver);
+
+    }
+    
+    @CallerSensitive
+    public static Connection getConnection(String url,
+        java.util.Properties info) throws SQLException {
+
+        return (getConnection(url, info, Reflection.getCallerClass()));// 获取调用者(应用程序)的Class对象
+    }
+    
+    private static Connection getConnection(
+        String url, java.util.Properties info, Class<?> caller) throws SQLException {
+        /*
+         * When callerCl is null, we should check the application's
+         * (which is invoking this class indirectly)
+         * classloader, so that the JDBC driver class outside rt.jar
+         * can be loaded from here.
+         */
+        ClassLoader callerCL = caller != null ? caller.getClassLoader() : null; // 应用程序的类加载器
+        synchronized(DriverManager.class) {
+            // synchronize loading of the correct classloader.
+            if (callerCL == null) {
+                callerCL = Thread.currentThread().getContextClassLoader(); // 线程上下文类加载器
+            }
+        }
+        
+        // .......
+    }
+    
+    // 判断driver是否由classLoader加载
+    private static boolean isDriverAllowed(Driver driver, ClassLoader classLoader) {
+        boolean result = false;
+        if(driver != null) {
+            Class<?> aClass = null;
+            try {
+                aClass =  Class.forName(driver.getClass().getName(), true, classLoader);
+            } catch (Exception ex) {
+                result = false;
+            }
+
+             result = ( aClass == driver.getClass() ) ? true : false;
+        }
+
+        return result;
+    }
+}
+```
+
 ### 5.2 Linking 链接
+
 #### Verification 验证
 #### Preparation 准备
 #### Resolution 解析
