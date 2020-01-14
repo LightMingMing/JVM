@@ -5,17 +5,19 @@ package jvm.oom;
  * VM Args: -Xss128k
  * VM Args: -Xss228k
  * VM Args: -Xss256k
+ *
  * @author LightMingMing
  */
 public class StackSOF {
     private int stackLength = 1;
 
+    @SuppressWarnings("InfiniteRecursion")
     public void stackLeak() {
         stackLength++;
         stackLeak();
     }
 
-    public static void main(String[] args) throws Throwable {
+    public static void main(String[] args) {
         StackSOF stackSOF = new StackSOF();
         try {
             stackSOF.stackLeak();

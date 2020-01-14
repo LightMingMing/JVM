@@ -10,6 +10,7 @@ public class BigObjectDirectAllocatedInTenured {
 
     private static final int _1M = 1024 * 1024;
 
+    @SuppressWarnings("unused")
     public static void main(String[] args) {
         byte[] allocation = new byte[4 * _1M];
     }

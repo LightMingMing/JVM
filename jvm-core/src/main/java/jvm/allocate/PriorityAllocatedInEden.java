@@ -10,11 +10,12 @@ public class PriorityAllocatedInEden {
 
     private static final int _1M = 1024 * 1024;
 
+    @SuppressWarnings("MismatchedReadAndWriteOfArray")
     public static void main(String[] args) {
         final int size = 4;
-        byte[][] allocs = new byte[size][];
+        byte[][] alloc = new byte[size][];
         for (int i = 0; i < size; i++)
-            allocs[i] = new byte[_1M];
+            alloc[i] = new byte[_1M];
     }
 }
 

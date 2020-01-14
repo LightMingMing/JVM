@@ -7,6 +7,7 @@ import java.io.Serializable;
  *
  * @author LightMingMing
  */
+@SuppressWarnings("unused")
 public class MagicalOverload {
 
     // char -> int -> long -> float -> double -> Character -> Serializable -> Object -> char... -> int...  -> ... -> Object...

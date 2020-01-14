@@ -3,9 +3,11 @@ package jvm.gc;
 /**
  * GC
  * VM params : JDK 1.8 -XX:+PrintGC -XX:+PrintGCDetails JDK 11 -Xlog:gc -Xlog:gc*
- * @see <a href='https://chriswhocodes.com'>hotspot options jdk</a>
+ *
  * @author LightMingMing
+ * @see <a href='https://chriswhocodes.com'>hotspot options jdk</a>
  */
+@SuppressWarnings({"unused", "UnusedAssignment"})
 public class ReferenceCountingGC {
 
     private Object instance = null;

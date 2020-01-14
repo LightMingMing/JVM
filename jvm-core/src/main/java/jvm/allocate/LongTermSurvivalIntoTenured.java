@@ -84,6 +84,7 @@ public class LongTermSurvivalIntoTenured {
 
     private static final int _1M = 1024 * 1024;
 
+    @SuppressWarnings({"unused", "UnusedAssignment"})
     public static void main(String[] args) {
         byte[] allocation1, allocation2, allocation3;
         allocation1 = new byte[_1M / 4];

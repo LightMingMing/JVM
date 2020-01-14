@@ -35,6 +35,7 @@ public class FinalizeEscapeGC {
     }
 
     @Override
+    @SuppressWarnings("deprecation") // deprecated since jdk 9
     protected void finalize() throws Throwable {
         System.out.println("Execute the finalize method...");
         System.out.println(Thread.currentThread()); // Finalizer 线程

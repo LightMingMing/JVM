@@ -7,6 +7,7 @@ package jvm.initialization;
  */
 public class PassiveReference {
 
+    @SuppressWarnings("unused")
     public static void main(String[] args) {
         int val = Sub.value; // 静态编译 -- Super.value, 只有Super会被初始化
         String hello = Sub.HELLO;

@@ -31,7 +31,7 @@ public class ByteUtils {
 
     public static byte[] replace(byte[] target, int targetPos, int length, byte[] replacement) {
         int interval = replacement.length - length;
-        int len = target.length + (interval > 0 ? interval : 0);
+        int len = target.length + Math.max(interval, 0);
         byte[] result = new byte[len];
         System.arraycopy(target, 0, result, 0, targetPos);
         System.arraycopy(replacement, 0, result, targetPos, replacement.length);

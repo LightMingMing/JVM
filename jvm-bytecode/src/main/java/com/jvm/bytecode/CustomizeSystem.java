@@ -9,6 +9,7 @@ import java.io.PrintStream;
  *
  * @author LightMingMing
  */
+@SuppressWarnings("unused")
 public final class CustomizeSystem {
 
     public static PrintStream out = null;

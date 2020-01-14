@@ -30,6 +30,7 @@ package jvm.execution.engine;
  *
  * @author LightMingMing
  */
+@SuppressWarnings("unused")
 public class MethodOverloadResolution {
 
     public static String computerType(Computer computer) {

@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class BootstrapClassLoaderExplore {
 
-    public static void main(String[] args) throws ClassNotFoundException {
+    public static void main(String[] args) {
 
         System.out.println(ArrayList.class.getClassLoader()); // is null
 

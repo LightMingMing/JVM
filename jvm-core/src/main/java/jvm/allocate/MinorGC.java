@@ -10,6 +10,7 @@ public class MinorGC {
 
     private static final int _1M = 1024 * 1024;
 
+    @SuppressWarnings({"unused", "UnusedAssignment"})
     public static void main(String[] args) {
         byte[] alloc1, alloc2, alloc3, alloc4;
         alloc1 = new byte[2 * _1M];
