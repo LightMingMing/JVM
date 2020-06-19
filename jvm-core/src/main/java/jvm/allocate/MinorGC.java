@@ -1,5 +1,7 @@
 package jvm.allocate;
 
+import jvm.monitor.SimpleGarbageCollectorMonitor;
+
 /**
  * MinorGC 新生代垃圾收集动作
  * VM params : -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:SurvivorRatio=8
@@ -12,11 +14,20 @@ public class MinorGC {
 
     @SuppressWarnings({"unused", "UnusedAssignment"})
     public static void main(String[] args) {
+        SimpleGarbageCollectorMonitor monitor = new SimpleGarbageCollectorMonitor();
+
         byte[] alloc1, alloc2, alloc3, alloc4;
         alloc1 = new byte[2 * _1M];
+        monitor.printGcInfo();
+
         alloc2 = new byte[2 * _1M];
-        alloc3 = new byte[2 * _1M];
-        alloc4 = new byte[4 * _1M]; // Minor GC
+        monitor.printGcInfo();
+
+        alloc3 = new byte[2 * _1M]; // Minor GC
+        monitor.printGcInfo();
+
+        alloc4 = new byte[4 * _1M];
+        monitor.printGcInfo();
     }
 }
 

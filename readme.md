@@ -32,7 +32,8 @@ JVM
 │       │   │       │       └── invokedynamic                   动态调用
 │       │   │       ├── gc                                      垃圾回收
 │       │   │       ├── initialization                          类初始化
-│       │   │       └── oom                                     模拟内存溢出
+│       │   │       ├── oom                                     模拟内存溢出
+│       │   │       └── monitor                                 GC监听器
 │       │   └── resources
 │       └── test
 │           ├── java
