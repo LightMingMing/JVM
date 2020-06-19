@@ -1,36 +1,45 @@
 # 深入理解JVM虚拟机
 ```
 JVM
- |---- jvm-bytecode                                                   Simple Java Byte Code Modifier
- |         |---- src/main/java
- |                     |---- com.jvm.bytecode
- |                                  |---- ByteUtils.java              字节工具
- |                                  |---- ConstantsPoolModifier.java  修改/替换常量池
-                                                                      当前仅支持'Constant_Utf8_info'和'Constant_Fieldref_info'
- |                                  |---- CustomeizeSystem.java       用于替换'java/lang/System'
- |                                  |---- HotSwapClassLoader.java
- |
- |         |---- src/test
- |                  |---- java                                        测试用例
- |                  |---- resources                                   字节码文件或测试输出文件
- |
- |---- jvm-core  
- |         |---- src/main/java
- |                     |---- jvm
- |                            |---- allocate                          内存分配策略
- |                            |---- classloading                      类加载器
- |                            |---- execution.engine                  执行引擎
- |                                          |----- invokedynamic      动态调用
- |                            |---- gc                                垃圾回收
- |                            |---- initialization                    类初始化
- |                            |---- oom                               模拟内存溢出
- |
- |         |---- src/main/test                  
- |
- |---- png
- |---- build.gradle
- |---- readme.md
- |---- settings.gradle
+├── jvm-bytecode                                                Simple Java Byte Code Modifier
+│   ├── build.gradle
+│   └── src
+│       ├── main
+│       │   ├── java
+│       │   │   └── com
+│       │   │       └── jvm
+│       │   │           └── bytecode
+│       │   │               ├── ByteUtils.java                  字节工具
+│       │   │               ├── ConstantPoolModifier.java       修改/替换常量池, 当前仅支持
+│       │   │               │                                   'Constant_Utf8_info'
+│       │   │               │                                   和'Constant_Fieldref_info'
+│       │   │               │
+│       │   │               ├── CustomizeSystem.java            用于替换'java/lang/System'
+│       │   │               └── HotSwapClassLoader.java
+│       └── test
+│           ├── java                                            测试用例
+│           └── resources                                       字节码文件或测试输出文件
+├── jvm-core
+│   ├── build.gradle
+│   └── src
+│       ├── main
+│       │   ├── java
+│       │   │   └── jvm
+│       │   │       ├── allocate                                内存分配策略
+│       │   │       ├── classloading                            类加载器
+│       │   │       ├── execution
+│       │   │       │   └── engine                              执行引擎
+│       │   │       │       └── invokedynamic                   动态调用
+│       │   │       ├── gc                                      垃圾回收
+│       │   │       ├── initialization                          类初始化
+│       │   │       └── oom                                     模拟内存溢出
+│       │   └── resources
+│       └── test
+│           ├── java
+│           └── resources
+├── png
+├── readme.md
+└── settings.gradle
 ```
 ## 1. Java 内存区域
 1. 程序计数器
