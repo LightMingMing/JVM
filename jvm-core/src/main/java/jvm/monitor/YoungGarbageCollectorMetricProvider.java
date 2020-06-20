@@ -17,7 +17,7 @@ public class YoungGarbageCollectorMetricProvider implements Supplier<GarbageColl
 
     private static final String UNKNOWN = "unknownYoung";
 
-    private final List<String> youngGcTypes = Arrays.asList("PS Scavenge", "Par New", "G1 Young Generation");
+    private final List<String> youngGcTypes = Arrays.asList("Copy", "PS Scavenge", "Par New", "G1 Young Generation");
 
     private final Map<String, GarbageCollectorMXBean> gcMXBeanMap = createMap();
 

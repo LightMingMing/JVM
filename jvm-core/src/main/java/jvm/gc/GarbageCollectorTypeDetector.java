@@ -11,6 +11,7 @@ import java.lang.management.MemoryManagerMXBean;
  * <li>ParNew + ConcurrentMarkSweep</li>
  * <li>G1 Young Generation + G1 Old Generation</li>
  * <li>ParNew + MarkSweepCompact (不推荐)</li>
+ * <li>Copy + MarkSweepCompact (不推荐)</li>
  *
  * @author LightMingMing
  */
@@ -25,7 +26,7 @@ public class GarbageCollectorTypeDetector {
     }
 }
 
-// TODO JDK 1.7
+// JDK 1.7与JDK 1.8一致
 
 // JDK 1.8
 /*
@@ -43,6 +44,12 @@ PS MarkSweep
 -XX:+UseParallelOldGC
 PS Scavenge
 PS MarkSweep
+ */
+
+/*
+-XX:+UseSerialGC
+Copy
+MarkSweepCompact
  */
 
 /*
