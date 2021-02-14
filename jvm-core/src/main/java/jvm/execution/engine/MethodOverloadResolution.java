@@ -2,7 +2,7 @@ package jvm.execution.engine;
 
 /**
  * MethodOverloadResolution || Static Dispatch
- * <p>javac -v MethodOverloadResolution</p>
+ * <p>javap -v MethodOverloadResolution</p>
  * <pre>
  * public static void main(java.lang.String[]);
  * descriptor: ([Ljava/lang/String;)V
