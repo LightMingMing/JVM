@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
         mavenCentral()
         jcenter()
     }
@@ -8,7 +8,7 @@ buildscript {
 
 subprojects {
     repositories {
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
         mavenCentral()
         jcenter()
     }
@@ -20,12 +20,13 @@ subprojects {
     compileJava.options.encoding = 'UTF-8'
 
     dependencies {
-        testCompile group: 'junit', name: 'junit', version: '4.12'
+        testImplementation group: 'junit', name: 'junit', version: '4.12'
     }
 }
 
 project(':jvm-core') {
     dependencies {
-        compile group: 'cglib', name: 'cglib', version: '3.2.8'
+        implementation group: 'org.openjdk.jol', name: 'jol-core', version: '0.14'
+        implementation group: 'cglib', name: 'cglib', version: '3.2.8'
     }
 }
