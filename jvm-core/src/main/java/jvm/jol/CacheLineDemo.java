@@ -1,5 +1,7 @@
 package jvm.jol;
 
+import java.util.function.Supplier;
+
 /**
  * 多线程修改同一个缓存行(64字节)中的数据时, 为保证缓存一致性, 会触发缓存失效, 降低性能
  * <p> output:
@@ -55,20 +57,16 @@ public class CacheLineDemo {
         }
     }
 
-    static LongWrapper[] longWrapperArray(int size, LongWrapperFactory factory) {
+    static LongWrapper[] longWrapperArray(int size, Supplier<LongWrapper> supplier) {
         LongWrapper[] wrappers = new LongWrapper[size];
         for (int i = 0; i < size; i++) {
-            wrappers[i] = factory.newLongWrapper();
+            wrappers[i] = supplier.get();
         }
         return wrappers;
     }
 
     interface LongWrapper {
         void setValue(long value);
-    }
-
-    interface LongWrapperFactory {
-        LongWrapper newLongWrapper();
     }
 
     @SuppressWarnings({"unused", "FieldCanBeLocal"})
